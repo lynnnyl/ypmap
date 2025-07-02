@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>My Leaflet Map</title>
+  <title>Global Airport Map</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -14,16 +14,33 @@
 
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
-    var map = L.map('map').setView([37.5665, 126.9780], 13); // 서울 좌표
+    // 지도 초기 위치: 중간 위치로 설정 (타이완 근처)
+    var map = L.map('map').setView([25.0, 140.0], 3);
 
+    // 타일 배경
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '© OpenStreetMap'
+      maxZoom: 18,
+      attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
-    L.marker([37.5665, 126.9780]).addTo(map)
-      .bindPopup('서울 시청')
-      .openPopup();
+    // 공항 위치 9개
+    const locations = [
+      { name: "한국 - 인천국제공항 (ICN)", lat: 37.4602, lng: 126.4407 },
+      { name: "일본 - 나리타국제공항 (NRT)", lat: 35.7767, lng: 140.3186 },
+      { name: "홍콩 - 홍콩국제공항 (HKG)", lat: 22.3080, lng: 113.9185 },
+      { name: "베트남 - 다낭국제공항 (DAD)", lat: 16.0430, lng: 108.1989 },
+      { name: "태국 - 방콕 수완나품공항 (BKK)", lat: 13.6900, lng: 100.7501 },
+      { name: "미국 - 호놀룰루국제공항 (HNL)", lat: 21.3187, lng: -157.9225 },
+      { name: "미국 - 로스앤젤레스공항 (LAX)", lat: 33.9416, lng: -118.4085 },
+      { name: "미국 - 샌프란시스코공항 (SFO)", lat: 37.6213, lng: -122.3790 },
+      { name: "미국 - 뉴어크공항 (EWR)", lat: 40.6895, lng: -74.1745 }
+    ];
+
+    // 마커 표시
+    locations.forEach(loc => {
+      L.marker([loc.lat, loc.lng]).addTo(map)
+        .bindPopup(loc.name);
+    });
   </script>
 </body>
 </html>
