@@ -8,7 +8,6 @@
   <style>
     #map { height: 100vh; margin: 0; }
 
-    /* 툴팁 커스텀 */
     .custom-tooltip {
       text-align: center;
       background-color: white;
@@ -33,13 +32,13 @@
       worldCopyJump: true
     }).setView([21.3187, -157.9225], 3);
 
-    // 🌍 배경지도: ESRI World Physical Map
-    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}', {
-      attribution: 'Tiles © Esri — National Geographic, Esri, and others',
-      maxZoom: 8
+    // 🎨 Esri Light Gray Canvas 타일
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles © Esri — Esri, HERE, Garmin, FAO, NOAA, USGS',
+      maxZoom: 16
     }).addTo(map);
 
-    // 🛫 공항 데이터 (아시아 공항은 이중 마커 처리)
+    // 공항 마커 데이터 (아시아 공항 이중 등록)
     const locations = [
       // 아시아 (오른쪽)
       { code: "ICN", name: "한국 - 인천공항", lat: 37.4602, lng: 126.4407 },
@@ -62,7 +61,7 @@
       { code: "EWR", name: "미국 - 뉴어크공항", lat: 40.6895, lng: -74.1745 }
     ];
 
-    // 마커 및 툴팁 추가
+    // 마커 + 툴팁
     locations.forEach(loc => {
       L.marker([loc.lat, loc.lng]).addTo(map)
         .bindPopup(loc.name)
