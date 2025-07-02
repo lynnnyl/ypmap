@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Global Airport Map</title>
+  <title>태평양 중심 공항 지도</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -14,29 +14,30 @@
 
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
-    // 지도 초기 위치: 중간 위치로 설정 (타이완 근처)
-    var map = L.map('map').setView([25.0, 140.0], 3);
+    // 1️⃣ 지도 중심을 하와이(호놀룰루)로 설정
+    var map = L.map('map', {
+      worldCopyJump: true // 태평양 중심 wrap을 부드럽게 처리
+    }).setView([21.3187, -157.9225], 3);
 
-    // 타일 배경
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 18,
-      attribution: '© OpenStreetMap contributors'
+    // 2️⃣ ESRI Ocean 태일 사용 (태평양 중심형)
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles © Esri, GEBCO, NOAA',
+      maxZoom: 13
     }).addTo(map);
 
-    // 공항 위치 9개
+    // 3️⃣ 9개 공항 마커
     const locations = [
       { name: "한국 - 인천국제공항 (ICN)", lat: 37.4602, lng: 126.4407 },
       { name: "일본 - 나리타국제공항 (NRT)", lat: 35.7767, lng: 140.3186 },
       { name: "홍콩 - 홍콩국제공항 (HKG)", lat: 22.3080, lng: 113.9185 },
-      { name: "베트남 - 다낭국제공항 (DAD)", lat: 16.0430, lng: 108.1989 },
+      { name: "베트남 - 다낭공항 (DAD)", lat: 16.0430, lng: 108.1989 },
       { name: "태국 - 방콕 수완나품공항 (BKK)", lat: 13.6900, lng: 100.7501 },
-      { name: "미국 - 호놀룰루국제공항 (HNL)", lat: 21.3187, lng: -157.9225 },
+      { name: "미국 - 호놀룰루공항 (HNL)", lat: 21.3187, lng: -157.9225 },
       { name: "미국 - 로스앤젤레스공항 (LAX)", lat: 33.9416, lng: -118.4085 },
       { name: "미국 - 샌프란시스코공항 (SFO)", lat: 37.6213, lng: -122.3790 },
       { name: "미국 - 뉴어크공항 (EWR)", lat: 40.6895, lng: -74.1745 }
     ];
 
-    // 마커 표시
     locations.forEach(loc => {
       L.marker([loc.lat, loc.lng]).addTo(map)
         .bindPopup(loc.name);
