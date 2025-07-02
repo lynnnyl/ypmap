@@ -7,13 +7,16 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <style>
     #map { height: 100vh; margin: 0; }
+
     .leaflet-tooltip {
+      background-color: white;
+      border: 1px solid #888;
+      padding: 2px 5px;
+      border-radius: 4px;
       font-weight: bold;
-      background: none;
-      border: none;
-      box-shadow: none;
-      color: #004f91;
-      font-size: 14px;
+      font-size: 13px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+      pointer-events: none;
     }
   </style>
 </head>
@@ -32,7 +35,6 @@
       maxZoom: 13
     }).addTo(map);
 
-    // 공항 목록 (중복 마커 포함)
     const locations = [
       // 아시아 (오른쪽)
       { code: "ICN", name: "한국 - 인천공항", lat: 37.4602, lng: 126.4407 },
@@ -40,7 +42,7 @@
       { code: "HKG", name: "홍콩 - 홍콩공항", lat: 22.3080, lng: 113.9185 },
       { code: "DAD", name: "베트남 - 다낭공항", lat: 16.0430, lng: 108.1989 },
       { code: "BKK", name: "태국 - 방콕공항", lat: 13.6900, lng: 100.7501 },
-      // 아시아 (왼쪽 - 경도 보정)
+      // 아시아 (왼쪽)
       { code: "ICN", name: "한국 - 인천공항", lat: 37.4602, lng: -233.5593 },
       { code: "NRT", name: "일본 - 나리타공항", lat: 35.7767, lng: -219.6814 },
       { code: "HKG", name: "홍콩 - 홍콩공항", lat: 22.3080, lng: -246.0815 },
@@ -53,14 +55,14 @@
       { code: "EWR", name: "미국 - 뉴어크공항", lat: 40.6895, lng: -74.1745 }
     ];
 
-    // 마커 + 툴팁 + 팝업 생성
     locations.forEach(loc => {
       L.marker([loc.lat, loc.lng]).addTo(map)
         .bindPopup(loc.name)
         .bindTooltip(loc.code, {
           permanent: true,
           direction: 'top',
-          offset: [0, -10]
+          offset: [0, -10],
+          opacity: 1
         });
     });
   </script>
