@@ -7,6 +7,14 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <style>
     #map { height: 100vh; margin: 0; }
+    .leaflet-tooltip {
+      font-weight: bold;
+      background: none;
+      border: none;
+      box-shadow: none;
+      color: #004f91;
+      font-size: 14px;
+    }
   </style>
 </head>
 <body>
@@ -14,39 +22,46 @@
 
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
-    // 지도 중심: 호놀룰루
-    var map = L.map('map', {
-      worldCopyJump: true // wrap 처리
+    const map = L.map('map', {
+      worldCopyJump: true
     }).setView([21.3187, -157.9225], 3);
 
-    // 태평양 중심 지도 타일 (ESRI Ocean Basemap)
+    // 태평양 중심 타일
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}', {
       attribution: 'Tiles © Esri, GEBCO, NOAA',
       maxZoom: 13
     }).addTo(map);
 
-    // 마커 목록 (아시아는 경도 -360 보정)
+    // 공항 목록 (중복 마커 포함)
     const locations = [
-      // ⬅ 아시아 (경도 보정: 동경 → 서경)
-      { name: "한국 - 인천공항 (ICN)", lat: 37.4602, lng: -233.5593 },     // 126.4407 - 360
-      { name: "일본 - 나리타공항 (NRT)", lat: 35.7767, lng: -219.6814 },  // 140.3186 - 360
-      { name: "홍콩 - 홍콩공항 (HKG)", lat: 22.3080, lng: -246.0815 },    // 113.9185 - 360
-      { name: "베트남 - 다낭공항 (DAD)", lat: 16.0430, lng: -251.8011 },  // 108.1989 - 360
-      { name: "태국 - 방콕공항 (BKK)", lat: 13.6900, lng: -259.2499 },    // 100.7501 - 360
-
-      // ⬇ 가운데
-      { name: "미국 - 호놀룰루공항 (HNL)", lat: 21.3187, lng: -157.9225 },
-
-      // ➡ 미국 본토
-      { name: "미국 - 로스앤젤레스공항 (LAX)", lat: 33.9416, lng: -118.4085 },
-      { name: "미국 - 샌프란시스코공항 (SFO)", lat: 37.6213, lng: -122.3790 },
-      { name: "미국 - 뉴어크공항 (EWR)", lat: 40.6895, lng: -74.1745 }
+      // 아시아 (오른쪽)
+      { code: "ICN", name: "한국 - 인천공항", lat: 37.4602, lng: 126.4407 },
+      { code: "NRT", name: "일본 - 나리타공항", lat: 35.7767, lng: 140.3186 },
+      { code: "HKG", name: "홍콩 - 홍콩공항", lat: 22.3080, lng: 113.9185 },
+      { code: "DAD", name: "베트남 - 다낭공항", lat: 16.0430, lng: 108.1989 },
+      { code: "BKK", name: "태국 - 방콕공항", lat: 13.6900, lng: 100.7501 },
+      // 아시아 (왼쪽 - 경도 보정)
+      { code: "ICN", name: "한국 - 인천공항", lat: 37.4602, lng: -233.5593 },
+      { code: "NRT", name: "일본 - 나리타공항", lat: 35.7767, lng: -219.6814 },
+      { code: "HKG", name: "홍콩 - 홍콩공항", lat: 22.3080, lng: -246.0815 },
+      { code: "DAD", name: "베트남 - 다낭공항", lat: 16.0430, lng: -251.8011 },
+      { code: "BKK", name: "태국 - 방콕공항", lat: 13.6900, lng: -259.2499 },
+      // 미국
+      { code: "HNL", name: "미국 - 호놀룰루공항", lat: 21.3187, lng: -157.9225 },
+      { code: "LAX", name: "미국 - 로스앤젤레스공항", lat: 33.9416, lng: -118.4085 },
+      { code: "SFO", name: "미국 - 샌프란시스코공항", lat: 37.6213, lng: -122.3790 },
+      { code: "EWR", name: "미국 - 뉴어크공항", lat: 40.6895, lng: -74.1745 }
     ];
 
-    // 마커 추가
+    // 마커 + 툴팁 + 팝업 생성
     locations.forEach(loc => {
       L.marker([loc.lat, loc.lng]).addTo(map)
-        .bindPopup(loc.name);
+        .bindPopup(loc.name)
+        .bindTooltip(loc.code, {
+          permanent: true,
+          direction: 'top',
+          offset: [0, -10]
+        });
     });
   </script>
 </body>
