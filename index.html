@@ -8,14 +8,18 @@
   <style>
     #map { height: 100vh; margin: 0; }
 
-    .leaflet-tooltip {
+    /* 툴팁 커스텀 */
+    .custom-tooltip {
+      text-align: center;
       background-color: white;
       border: 1px solid #888;
-      padding: 2px 5px;
+      padding: 2px 6px;
       border-radius: 4px;
       font-weight: bold;
       font-size: 13px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+      transform: translateX(-50%);
+      left: 50% !important;
       pointer-events: none;
     }
   </style>
@@ -29,12 +33,13 @@
       worldCopyJump: true
     }).setView([21.3187, -157.9225], 3);
 
-    // 태평양 중심 타일
-    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}', {
-      attribution: 'Tiles © Esri, GEBCO, NOAA',
-      maxZoom: 13
+    // 🌍 배경지도: ESRI World Physical Map
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles © Esri — National Geographic, Esri, and others',
+      maxZoom: 8
     }).addTo(map);
 
+    // 🛫 공항 데이터 (아시아 공항은 이중 마커 처리)
     const locations = [
       // 아시아 (오른쪽)
       { code: "ICN", name: "한국 - 인천공항", lat: 37.4602, lng: 126.4407 },
@@ -42,12 +47,14 @@
       { code: "HKG", name: "홍콩 - 홍콩공항", lat: 22.3080, lng: 113.9185 },
       { code: "DAD", name: "베트남 - 다낭공항", lat: 16.0430, lng: 108.1989 },
       { code: "BKK", name: "태국 - 방콕공항", lat: 13.6900, lng: 100.7501 },
+
       // 아시아 (왼쪽)
       { code: "ICN", name: "한국 - 인천공항", lat: 37.4602, lng: -233.5593 },
       { code: "NRT", name: "일본 - 나리타공항", lat: 35.7767, lng: -219.6814 },
       { code: "HKG", name: "홍콩 - 홍콩공항", lat: 22.3080, lng: -246.0815 },
       { code: "DAD", name: "베트남 - 다낭공항", lat: 16.0430, lng: -251.8011 },
       { code: "BKK", name: "태국 - 방콕공항", lat: 13.6900, lng: -259.2499 },
+
       // 미국
       { code: "HNL", name: "미국 - 호놀룰루공항", lat: 21.3187, lng: -157.9225 },
       { code: "LAX", name: "미국 - 로스앤젤레스공항", lat: 33.9416, lng: -118.4085 },
@@ -55,6 +62,7 @@
       { code: "EWR", name: "미국 - 뉴어크공항", lat: 40.6895, lng: -74.1745 }
     ];
 
+    // 마커 및 툴팁 추가
     locations.forEach(loc => {
       L.marker([loc.lat, loc.lng]).addTo(map)
         .bindPopup(loc.name)
@@ -62,7 +70,7 @@
           permanent: true,
           direction: 'top',
           offset: [0, -10],
-          opacity: 1
+          className: 'custom-tooltip'
         });
     });
   </script>
