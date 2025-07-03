@@ -12,21 +12,18 @@
       background: none;
       border: none;
       box-shadow: none;
+      pointer-events: none;
+      white-space: nowrap;
       font-weight: bold;
       font-size: 13px;
       color: #222;
-      pointer-events: none;
-      white-space: nowrap;
       text-align: center;
-      left: 50% !important;
-      transform: translateX(-50%);
+      display: flex;
+      justify-content: center;
     }
 
     /* 화살표 제거 */
-    .leaflet-tooltip-bottom::before,
-    .leaflet-tooltip-top::before,
-    .leaflet-tooltip-left::before,
-    .leaflet-tooltip-right::before {
+    .leaflet-tooltip::before {
       display: none !important;
     }
   </style>
@@ -40,20 +37,21 @@
       worldCopyJump: true
     }).setView([21.3187, -157.9225], 3);
 
+    // 회색 지도 타일
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
       attribution: 'Tiles © Esri — Esri, HERE, Garmin, FAO, NOAA, USGS',
       maxZoom: 16
     }).addTo(map);
 
     const locations = [
-      // 아시아 (정위치)
+      // 아시아
       { code: "ICN", lat: 37.4602, lng: 126.4407, url: "https://www.notion.so/airpremia/ICN-21eb40bde97d80fca2f8e93d738ba6c4" },
       { code: "NRT", lat: 35.7767, lng: 140.3186, url: "https://www.notion.so/airpremia/NRT-21eb40bde97d8015bf4dde5b724a9733" },
       { code: "HKG", lat: 22.3080, lng: 113.9185, url: "https://www.notion.so/airpremia/HKG-21eb40bde97d80e8a444dff5945239b9" },
       { code: "DAD", lat: 16.0430, lng: 108.1989, url: "https://www.notion.so/airpremia/DAD-21eb40bde97d806a9143fc1593b8353f" },
       { code: "BKK", lat: 13.6900, lng: 100.7501, url: "https://www.notion.so/airpremia/BKK-21eb40bde97d80b9b533e35a57a463e8" },
 
-      // 아시아 (좌측 복제)
+      // 아시아 복제 (좌측)
       { code: "ICN", lat: 37.4602, lng: -233.5593, url: "https://www.notion.so/airpremia/ICN-21eb40bde97d80fca2f8e93d738ba6c4" },
       { code: "NRT", lat: 35.7767, lng: -219.6814, url: "https://www.notion.so/airpremia/NRT-21eb40bde97d8015bf4dde5b724a9733" },
       { code: "HKG", lat: 22.3080, lng: -246.0815, url: "https://www.notion.so/airpremia/HKG-21eb40bde97d80e8a444dff5945239b9" },
@@ -69,12 +67,18 @@
 
     locations.forEach(loc => {
       const marker = L.marker([loc.lat, loc.lng]).addTo(map);
-      marker.bindTooltip(loc.code, {
+
+      // DAD, SFO만 위, 나머지는 아래
+      const direction = (loc.code === "DAD" || loc.code === "SFO") ? 'top' : 'bottom';
+      const offset = (direction === 'top') ? [0, -10] : [0, 10];
+
+      marker.bindTooltip(`<span>${loc.code}</span>`, {
         permanent: true,
-        direction: 'bottom',
-        offset: [0, 10],
+        direction: direction,
+        offset: offset,
         className: 'custom-tooltip'
       });
+
       marker.on('click', () => {
         window.open(loc.url, '_blank');
       });
