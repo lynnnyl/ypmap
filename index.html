@@ -6,19 +6,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <style>
-  .leaflet-tooltip.custom-tooltip {
-    background: none;
-    border: none;
-    box-shadow: none;
-    font-weight: bold;
-    font-size: 13px;
-    color: #222;
-    pointer-events: none;
-    white-space: nowrap;
-    margin-left: -50%;
-    left: 50% !important;
-  }
-</style>
+    #map { height: 100vh; margin: 0; }
+
+    .leaflet-tooltip.custom-tooltip {
+      background: none;
+      border: none;
+      box-shadow: none;
+      font-weight: bold;
+      font-size: 13px;
+      color: #222;
+      pointer-events: none;
+      white-space: nowrap;
+      margin-left: -50%;
+      left: 50% !important;
+    }
+  </style>
 </head>
 <body>
   <div id="map"></div>
@@ -29,22 +31,21 @@
       worldCopyJump: true
     }).setView([21.3187, -157.9225], 3);
 
-    // 회색 스타일 지도
+    // Light Gray Canvas
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
       attribution: 'Tiles © Esri — Esri, HERE, Garmin, FAO, NOAA, USGS',
       maxZoom: 16
     }).addTo(map);
 
-    // 마커 정보 및 Notion 링크
     const locations = [
-      // 오른쪽 아시아
+      // 아시아 (오른쪽)
       { code: "ICN", lat: 37.4602, lng: 126.4407, url: "https://www.notion.so/airpremia/ICN-21eb40bde97d80fca2f8e93d738ba6c4" },
       { code: "NRT", lat: 35.7767, lng: 140.3186, url: "https://www.notion.so/airpremia/NRT-21eb40bde97d8015bf4dde5b724a9733" },
       { code: "HKG", lat: 22.3080, lng: 113.9185, url: "https://www.notion.so/airpremia/HKG-21eb40bde97d80e8a444dff5945239b9" },
       { code: "DAD", lat: 16.0430, lng: 108.1989, url: "https://www.notion.so/airpremia/DAD-21eb40bde97d806a9143fc1593b8353f" },
       { code: "BKK", lat: 13.6900, lng: 100.7501, url: "https://www.notion.so/airpremia/BKK-21eb40bde97d80b9b533e35a57a463e8" },
 
-      // 왼쪽 아시아 (경도만 음수 보정)
+      // 아시아 (왼쪽 복제)
       { code: "ICN", lat: 37.4602, lng: -233.5593, url: "https://www.notion.so/airpremia/ICN-21eb40bde97d80fca2f8e93d738ba6c4" },
       { code: "NRT", lat: 35.7767, lng: -219.6814, url: "https://www.notion.so/airpremia/NRT-21eb40bde97d8015bf4dde5b724a9733" },
       { code: "HKG", lat: 22.3080, lng: -246.0815, url: "https://www.notion.so/airpremia/HKG-21eb40bde97d80e8a444dff5945239b9" },
@@ -58,7 +59,7 @@
       { code: "EWR", lat: 40.6895, lng: -74.1745, url: "https://www.notion.so/airpremia/EWR-21eb40bde97d80aab28bc0d69d0e2a44" }
     ];
 
-    // 마커 생성 + 클릭 시 링크 이동 + 툴팁 표시
+    // 마커 생성 및 툴팁 + 클릭 링크
     locations.forEach(loc => {
       const marker = L.marker([loc.lat, loc.lng]).addTo(map);
       marker.bindTooltip(loc.code, {
