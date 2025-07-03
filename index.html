@@ -8,23 +8,25 @@
   <style>
     #map { height: 100vh; margin: 0; }
 
-    .leaflet-tooltip.custom-tooltip {
-      background: none;
-      border: none;
-      box-shadow: none;
-      pointer-events: none;
-      white-space: nowrap;
-      font-weight: bold;
-      font-size: 13px;
-      color: #222;
-      text-align: center;
-      display: flex;
-      justify-content: center;
+    .custom-marker {
+      position: relative;
+      width: 30px;
+      height: 42px;
+      background-image: url('https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png');
+      background-size: contain;
+      background-repeat: no-repeat;
     }
 
-    /* 화살표 제거 */
-    .leaflet-tooltip::before {
-      display: none !important;
+    .marker-label {
+      position: absolute;
+      top: 0px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 12px;
+      font-weight: bold;
+      color: black;
+      pointer-events: none;
+      white-space: nowrap;
     }
   </style>
 </head>
@@ -37,7 +39,6 @@
       worldCopyJump: true
     }).setView([21.3187, -157.9225], 3);
 
-    // 회색 지도 타일
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
       attribution: 'Tiles © Esri — Esri, HERE, Garmin, FAO, NOAA, USGS',
       maxZoom: 16
@@ -66,22 +67,15 @@
     ];
 
     locations.forEach(loc => {
-      const marker = L.marker([loc.lat, loc.lng]).addTo(map);
-
-      // DAD, SFO만 위, 나머지는 아래
-      const direction = (loc.code === "DAD" || loc.code === "SFO") ? 'top' : 'bottom';
-      const offset = (direction === 'top') ? [0, -10] : [0, 10];
-
-      marker.bindTooltip(`<span>${loc.code}</span>`, {
-        permanent: true,
-        direction: direction,
-        offset: offset,
-        className: 'custom-tooltip'
+      const icon = L.divIcon({
+        className: 'custom-marker',
+        html: `<div class="marker-label">${loc.code}</div>`,
+        iconSize: [30, 42],
+        iconAnchor: [15, 42]
       });
 
-      marker.on('click', () => {
-        window.open(loc.url, '_blank');
-      });
+      const marker = L.marker([loc.lat, loc.lng], { icon }).addTo(map);
+      marker.on('click', () => window.open(loc.url, '_blank'));
     });
   </script>
 </body>
