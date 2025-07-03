@@ -1,32 +1,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>태평양 중심 공항 지도</title>
+  <title>핀 마커 툴팁 지도</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <style>
     #map { height: 100vh; margin: 0; }
 
-    .custom-marker {
-      position: relative;
-      width: 30px;
-      height: 42px;
-      background-image: url('https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png');
-      background-size: contain;
-      background-repeat: no-repeat;
-    }
-
-    .marker-label {
-      position: absolute;
-      top: 0px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 12px;
-      font-weight: bold;
-      color: black;
+    .leaflet-tooltip.custom-tooltip {
+      background: none;
+      border: none;
+      box-shadow: none;
       pointer-events: none;
       white-space: nowrap;
+      font-weight: bold;
+      font-size: 14px;
+      color: white;
+      text-align: center;
+      text-shadow:
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000;
+    }
+
+    .leaflet-tooltip::before {
+      display: none !important; /* 화살표 제거 */
     }
   </style>
 </head>
@@ -39,43 +39,51 @@
       worldCopyJump: true
     }).setView([21.3187, -157.9225], 3);
 
+    // 회색 타일맵
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
-      attribution: 'Tiles © Esri — Esri, HERE, Garmin, FAO, NOAA, USGS',
+      attribution: 'Tiles © Esri',
       maxZoom: 16
     }).addTo(map);
 
+    // 핀 모양 마커 아이콘 (투명 내부)
+    const pinIcon = L.icon({
+      iconUrl: 'https://cdn-icons-png.flaticon.com/512/2776/2776067.png',
+      iconSize: [30, 30],
+      iconAnchor: [15, 30]
+    });
+
     const locations = [
-      // 아시아
       { code: "ICN", lat: 37.4602, lng: 126.4407, url: "https://www.notion.so/airpremia/ICN-21eb40bde97d80fca2f8e93d738ba6c4" },
       { code: "NRT", lat: 35.7767, lng: 140.3186, url: "https://www.notion.so/airpremia/NRT-21eb40bde97d8015bf4dde5b724a9733" },
       { code: "HKG", lat: 22.3080, lng: 113.9185, url: "https://www.notion.so/airpremia/HKG-21eb40bde97d80e8a444dff5945239b9" },
       { code: "DAD", lat: 16.0430, lng: 108.1989, url: "https://www.notion.so/airpremia/DAD-21eb40bde97d806a9143fc1593b8353f" },
       { code: "BKK", lat: 13.6900, lng: 100.7501, url: "https://www.notion.so/airpremia/BKK-21eb40bde97d80b9b533e35a57a463e8" },
+      { code: "HNL", lat: 21.3187, lng: -157.9225, url: "https://www.notion.so/airpremia/HNL-21eb40bde97d80c8b0e4f936e18c4500" },
+      { code: "LAX", lat: 33.9416, lng: -118.4085, url: "https://www.notion.so/airpremia/LAX-21eb40bde97d80df8d01fd1c3e847eb6" },
+      { code: "SFO", lat: 37.6213, lng: -122.3790, url: "https://www.notion.so/airpremia/SFO-3a931d37379f4da5bb5755a6c4fad5e1" },
+      { code: "EWR", lat: 40.6895, lng: -74.1745, url: "https://www.notion.so/airpremia/EWR-21eb40bde97d80aab28bc0d69d0e2a44" },
 
       // 아시아 복제 (좌측)
       { code: "ICN", lat: 37.4602, lng: -233.5593, url: "https://www.notion.so/airpremia/ICN-21eb40bde97d80fca2f8e93d738ba6c4" },
       { code: "NRT", lat: 35.7767, lng: -219.6814, url: "https://www.notion.so/airpremia/NRT-21eb40bde97d8015bf4dde5b724a9733" },
       { code: "HKG", lat: 22.3080, lng: -246.0815, url: "https://www.notion.so/airpremia/HKG-21eb40bde97d80e8a444dff5945239b9" },
       { code: "DAD", lat: 16.0430, lng: -251.8011, url: "https://www.notion.so/airpremia/DAD-21eb40bde97d806a9143fc1593b8353f" },
-      { code: "BKK", lat: 13.6900, lng: -259.2499, url: "https://www.notion.so/airpremia/BKK-21eb40bde97d80b9b533e35a57a463e8" },
-
-      // 미국
-      { code: "HNL", lat: 21.3187, lng: -157.9225, url: "https://www.notion.so/airpremia/HNL-21eb40bde97d80c8b0e4f936e18c4500" },
-      { code: "LAX", lat: 33.9416, lng: -118.4085, url: "https://www.notion.so/airpremia/LAX-21eb40bde97d80df8d01fd1c3e847eb6" },
-      { code: "SFO", lat: 37.6213, lng: -122.3790, url: "https://www.notion.so/airpremia/SFO-3a931d37379f4da5bb5755a6c4fad5e1" },
-      { code: "EWR", lat: 40.6895, lng: -74.1745, url: "https://www.notion.so/airpremia/EWR-21eb40bde97d80aab28bc0d69d0e2a44" }
+      { code: "BKK", lat: 13.6900, lng: -259.2499, url: "https://www.notion.so/airpremia/BKK-21eb40bde97d80b9b533e35a57a463e8" }
     ];
 
     locations.forEach(loc => {
-      const icon = L.divIcon({
-        className: 'custom-marker',
-        html: `<div class="marker-label">${loc.code}</div>`,
-        iconSize: [30, 42],
-        iconAnchor: [15, 42]
+      const marker = L.marker([loc.lat, loc.lng], { icon: pinIcon }).addTo(map);
+
+      marker.bindTooltip(loc.code, {
+        permanent: true,
+        direction: 'top',
+        offset: [0, -5],
+        className: 'custom-tooltip'
       });
 
-      const marker = L.marker([loc.lat, loc.lng], { icon }).addTo(map);
-      marker.on('click', () => window.open(loc.url, '_blank'));
+      marker.on('click', () => {
+        window.open(loc.url, '_blank');
+      });
     });
   </script>
 </body>
