@@ -10,13 +10,12 @@
 
     .custom-tooltip {
       text-align: center;
-      background-color: white;
-      border: 1px solid #888;
-      padding: 2px 6px;
-      border-radius: 4px;
+      background: none;
+      border: none;
+      box-shadow: none;
       font-weight: bold;
       font-size: 13px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+      color: #222;
       transform: translateX(-50%);
       left: 50% !important;
       pointer-events: none;
@@ -32,45 +31,47 @@
       worldCopyJump: true
     }).setView([21.3187, -157.9225], 3);
 
-    // 🎨 Esri Light Gray Canvas 타일
+    // 회색 스타일 지도
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
       attribution: 'Tiles © Esri — Esri, HERE, Garmin, FAO, NOAA, USGS',
       maxZoom: 16
     }).addTo(map);
 
-    // 공항 마커 데이터 (아시아 공항 이중 등록)
+    // 마커 정보 및 Notion 링크
     const locations = [
-      // 아시아 (오른쪽)
-      { code: "ICN", name: "한국 - 인천공항", lat: 37.4602, lng: 126.4407 },
-      { code: "NRT", name: "일본 - 나리타공항", lat: 35.7767, lng: 140.3186 },
-      { code: "HKG", name: "홍콩 - 홍콩공항", lat: 22.3080, lng: 113.9185 },
-      { code: "DAD", name: "베트남 - 다낭공항", lat: 16.0430, lng: 108.1989 },
-      { code: "BKK", name: "태국 - 방콕공항", lat: 13.6900, lng: 100.7501 },
+      // 오른쪽 아시아
+      { code: "ICN", lat: 37.4602, lng: 126.4407, url: "https://www.notion.so/airpremia/ICN-21eb40bde97d80fca2f8e93d738ba6c4" },
+      { code: "NRT", lat: 35.7767, lng: 140.3186, url: "https://www.notion.so/airpremia/NRT-21eb40bde97d8015bf4dde5b724a9733" },
+      { code: "HKG", lat: 22.3080, lng: 113.9185, url: "https://www.notion.so/airpremia/HKG-21eb40bde97d80e8a444dff5945239b9" },
+      { code: "DAD", lat: 16.0430, lng: 108.1989, url: "https://www.notion.so/airpremia/DAD-21eb40bde97d806a9143fc1593b8353f" },
+      { code: "BKK", lat: 13.6900, lng: 100.7501, url: "https://www.notion.so/airpremia/BKK-21eb40bde97d80b9b533e35a57a463e8" },
 
-      // 아시아 (왼쪽)
-      { code: "ICN", name: "한국 - 인천공항", lat: 37.4602, lng: -233.5593 },
-      { code: "NRT", name: "일본 - 나리타공항", lat: 35.7767, lng: -219.6814 },
-      { code: "HKG", name: "홍콩 - 홍콩공항", lat: 22.3080, lng: -246.0815 },
-      { code: "DAD", name: "베트남 - 다낭공항", lat: 16.0430, lng: -251.8011 },
-      { code: "BKK", name: "태국 - 방콕공항", lat: 13.6900, lng: -259.2499 },
+      // 왼쪽 아시아 (경도만 음수 보정)
+      { code: "ICN", lat: 37.4602, lng: -233.5593, url: "https://www.notion.so/airpremia/ICN-21eb40bde97d80fca2f8e93d738ba6c4" },
+      { code: "NRT", lat: 35.7767, lng: -219.6814, url: "https://www.notion.so/airpremia/NRT-21eb40bde97d8015bf4dde5b724a9733" },
+      { code: "HKG", lat: 22.3080, lng: -246.0815, url: "https://www.notion.so/airpremia/HKG-21eb40bde97d80e8a444dff5945239b9" },
+      { code: "DAD", lat: 16.0430, lng: -251.8011, url: "https://www.notion.so/airpremia/DAD-21eb40bde97d806a9143fc1593b8353f" },
+      { code: "BKK", lat: 13.6900, lng: -259.2499, url: "https://www.notion.so/airpremia/BKK-21eb40bde97d80b9b533e35a57a463e8" },
 
       // 미국
-      { code: "HNL", name: "미국 - 호놀룰루공항", lat: 21.3187, lng: -157.9225 },
-      { code: "LAX", name: "미국 - 로스앤젤레스공항", lat: 33.9416, lng: -118.4085 },
-      { code: "SFO", name: "미국 - 샌프란시스코공항", lat: 37.6213, lng: -122.3790 },
-      { code: "EWR", name: "미국 - 뉴어크공항", lat: 40.6895, lng: -74.1745 }
+      { code: "HNL", lat: 21.3187, lng: -157.9225, url: "https://www.notion.so/airpremia/HNL-21eb40bde97d80c8b0e4f936e18c4500" },
+      { code: "LAX", lat: 33.9416, lng: -118.4085, url: "https://www.notion.so/airpremia/LAX-21eb40bde97d80df8d01fd1c3e847eb6" },
+      { code: "SFO", lat: 37.6213, lng: -122.3790, url: "https://www.notion.so/airpremia/SFO-3a931d37379f4da5bb5755a6c4fad5e1" },
+      { code: "EWR", lat: 40.6895, lng: -74.1745, url: "https://www.notion.so/airpremia/EWR-21eb40bde97d80aab28bc0d69d0e2a44" }
     ];
 
-    // 마커 + 툴팁
+    // 마커 생성 + 클릭 시 링크 이동 + 툴팁 표시
     locations.forEach(loc => {
-      L.marker([loc.lat, loc.lng]).addTo(map)
-        .bindPopup(loc.name)
-        .bindTooltip(loc.code, {
-          permanent: true,
-          direction: 'top',
-          offset: [0, -10],
-          className: 'custom-tooltip'
-        });
+      const marker = L.marker([loc.lat, loc.lng]).addTo(map);
+      marker.bindTooltip(loc.code, {
+        permanent: true,
+        direction: 'top',
+        offset: [0, -10],
+        className: 'custom-tooltip'
+      });
+      marker.on('click', () => {
+        window.open(loc.url, '_blank');
+      });
     });
   </script>
 </body>
