@@ -17,8 +17,11 @@
       color: #222;
       pointer-events: none;
       white-space: nowrap;
-      margin-left: -50%;
-      left: 50% !important;
+
+      /* 정중앙 정렬 */
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
     }
   </style>
 </head>
@@ -31,21 +34,22 @@
       worldCopyJump: true
     }).setView([21.3187, -157.9225], 3);
 
-    // Light Gray Canvas
+    // 지도 배경
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
       attribution: 'Tiles © Esri — Esri, HERE, Garmin, FAO, NOAA, USGS',
       maxZoom: 16
     }).addTo(map);
 
+    // 마커 데이터
     const locations = [
-      // 아시아 (오른쪽)
+      // 아시아 (정위치)
       { code: "ICN", lat: 37.4602, lng: 126.4407, url: "https://www.notion.so/airpremia/ICN-21eb40bde97d80fca2f8e93d738ba6c4" },
       { code: "NRT", lat: 35.7767, lng: 140.3186, url: "https://www.notion.so/airpremia/NRT-21eb40bde97d8015bf4dde5b724a9733" },
       { code: "HKG", lat: 22.3080, lng: 113.9185, url: "https://www.notion.so/airpremia/HKG-21eb40bde97d80e8a444dff5945239b9" },
       { code: "DAD", lat: 16.0430, lng: 108.1989, url: "https://www.notion.so/airpremia/DAD-21eb40bde97d806a9143fc1593b8353f" },
       { code: "BKK", lat: 13.6900, lng: 100.7501, url: "https://www.notion.so/airpremia/BKK-21eb40bde97d80b9b533e35a57a463e8" },
 
-      // 아시아 (왼쪽 복제)
+      // 아시아 (좌측 복제)
       { code: "ICN", lat: 37.4602, lng: -233.5593, url: "https://www.notion.so/airpremia/ICN-21eb40bde97d80fca2f8e93d738ba6c4" },
       { code: "NRT", lat: 35.7767, lng: -219.6814, url: "https://www.notion.so/airpremia/NRT-21eb40bde97d8015bf4dde5b724a9733" },
       { code: "HKG", lat: 22.3080, lng: -246.0815, url: "https://www.notion.so/airpremia/HKG-21eb40bde97d80e8a444dff5945239b9" },
@@ -59,7 +63,7 @@
       { code: "EWR", lat: 40.6895, lng: -74.1745, url: "https://www.notion.so/airpremia/EWR-21eb40bde97d80aab28bc0d69d0e2a44" }
     ];
 
-    // 마커 생성 및 툴팁 + 클릭 링크
+    // 마커 생성
     locations.forEach(loc => {
       const marker = L.marker([loc.lat, loc.lng]).addTo(map);
       marker.bindTooltip(loc.code, {
